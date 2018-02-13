@@ -327,7 +327,15 @@ args = ["verify-project"]
 
 [tasks.audit]
 description = "Runs verify-audit cargo plugin."
-condition = { env = { "CARGO_MAKE_CRATE_HAS_DEPENDENCIES" = "TRUE" } }
+condition_script = [
+    '''
+    test -z "'${CARGO_MAKE_CRATE_IS_WORKSPACE_MEMBER}'" &&
+    (
+        test $CARGO_MAKE_CRATE_HAS_DEPENDENCIES = "TRUE" ||
+        test $CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES = "TRUE"
+    )
+    '''
+]
 command = "cargo"
 args = ["audit"]
 
@@ -337,7 +345,15 @@ args = ["audit"]
 
 [tasks.outdated]
 description = "Runs verify-outdated cargo plugin."
-condition = { env = { "CARGO_MAKE_CRATE_HAS_DEPENDENCIES" = "TRUE" } }
+condition_script = [
+    '''
+    test -z "'${CARGO_MAKE_CRATE_IS_WORKSPACE_MEMBER}'" &&
+    (
+        test $CARGO_MAKE_CRATE_HAS_DEPENDENCIES = "TRUE" ||
+        test $CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES = "TRUE"
+    )
+    '''
+]
 command = "cargo"
 args = ["outdated", "--root-deps-only", "--exit-code", "1"]
 
@@ -436,7 +452,7 @@ script = [
 '''
 #prevent codecov publish in member builds
 export CARGO_MAKE_SKIP_CODECOV="true"
-
+export CARGO_MAKE_CRATE_IS_WORKSPACE_MEMBER="true"
 export CARGO_MAKE_WORKSPACE_TARGET_DIRECTORY="${CARGO_MAKE_WORKING_DIRECTORY}/target"
 
 #output coverage data goes into workspace level
@@ -446,6 +462,7 @@ cargo make --loglevel=${CARGO_MAKE_LOG_LEVEL} ${CARGO_MAKE_MEMBER_TASK}
 
 unset CARGO_MAKE_COVERAGE_REPORT_DIRECTORY
 unset CARGO_MAKE_WORKSPACE_TARGET_DIRECTORY
+unset CARGO_MAKE_CRATE_IS_WORKSPACE_MEMBER
 unset CARGO_MAKE_SKIP_CODECOV
 '''
 ]

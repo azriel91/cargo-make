@@ -164,6 +164,12 @@ fn setup_env_for_crate() -> CrateInfo {
     let members_string = members.join(",");
     env::set_var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS", &members_string);
 
+    let workspace_has_dependencies_var_value = if members.is_empty() { "FALSE" } else { "TRUE" };
+    env::set_var(
+        "CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES",
+        workspace_has_dependencies_var_value,
+    );
+
     crate_info_clone
 }
 

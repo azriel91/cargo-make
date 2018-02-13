@@ -199,6 +199,7 @@ fn setup_env_for_crate_load_toml_found() {
     env::set_var("CARGO_MAKE_CRATE_IS_WORKSPACE", "EMPTY");
     env::set_var("CARGO_MAKE_CRATE_HAS_DEPENDENCIES", "EMPTY");
     env::set_var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS", "EMPTY");
+    env::set_var("CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES", "EMPTY");
 
     setup_env_for_crate();
 
@@ -231,6 +232,10 @@ fn setup_env_for_crate_load_toml_found() {
     );
     assert_eq!(env::var("CARGO_MAKE_CRATE_IS_WORKSPACE").unwrap(), "FALSE");
     assert_eq!(env::var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS").unwrap(), "");
+    assert_eq!(
+        env::var("CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES").unwrap(),
+        "FALSE"
+    );
 }
 
 #[test]
@@ -246,6 +251,7 @@ fn setup_env_for_crate_load_toml_not_found_and_cwd() {
     env::set_var("CARGO_MAKE_CRATE_IS_WORKSPACE", "EMPTY");
     env::set_var("CARGO_MAKE_CRATE_HAS_DEPENDENCIES", "EMPTY");
     env::set_var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS", "EMPTY");
+    env::set_var("CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES", "EMPTY");
 
     env::set_var("CARGO_MAKE_WORKING_DIRECTORY", "EMPTY");
     assert!(env::var("CARGO_MAKE_WORKING_DIRECTORY").unwrap() == "EMPTY");
@@ -302,6 +308,10 @@ fn setup_env_for_crate_load_toml_not_found_and_cwd() {
     );
     assert_eq!(env::var("CARGO_MAKE_CRATE_IS_WORKSPACE").unwrap(), "FALSE");
     assert_eq!(env::var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS").unwrap(), "");
+    assert_eq!(
+        env::var("CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES").unwrap(),
+        "FALSE"
+    );
 }
 
 #[test]
@@ -317,6 +327,7 @@ fn setup_env_for_crate_workspace() {
     env::set_var("CARGO_MAKE_CRATE_HAS_DEPENDENCIES", "EMPTY");
     env::set_var("CARGO_MAKE_CRATE_IS_WORKSPACE", "EMPTY");
     env::set_var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS", "EMPTY");
+    env::set_var("CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES", "EMPTY");
 
     setup_cwd(Some("examples/workspace"));
     setup_env_for_crate();
@@ -338,6 +349,10 @@ fn setup_env_for_crate_workspace() {
     assert_eq!(
         env::var("CARGO_MAKE_CRATE_WORKSPACE_MEMBERS").unwrap(),
         "member1,member2"
+    );
+    assert_eq!(
+        env::var("CARGO_MAKE_WORKSPACE_HAS_DEPENDENCIES").unwrap(),
+        "TRUE"
     );
 }
 
